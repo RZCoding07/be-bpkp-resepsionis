@@ -9,6 +9,7 @@ import { db_app } from './config/Database.js';
 import { rateLimit } from 'express-rate-limit'
 import compression from "compression";
 import { Admin, Receptionist, Visitor, Division, Employee, VisitorQR } from './models/models.js';
+import router from './routes/index.js';
 
 dotenv.config();
 
@@ -29,7 +30,7 @@ app.use(morgan('dev'));
 const initializeDatabase = async () => {
     try {
         await db_app.authenticate(); // Test connection
-        await db_app.sync(); // Sync all models
+        // await db_app.sync(); // Sync all models
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
@@ -41,6 +42,7 @@ initializeDatabase();
 app.use(express.json());  // Parse JSON bodies
 app.use(express.urlencoded({ extended: true }));  // Parse URL-encoded bodies
 app.use(cookieParser());  // Parse Cookie header and populate req.cookies
+app.use(router);
 
 app.use((err, req, res, next) => {
     console.error('Error occurred:', err);

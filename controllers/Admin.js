@@ -1,4 +1,6 @@
-import { Admin } from "../models/models";
+import { Admin } from "../models/models.js";
+import bcrypt from 'bcrypt';
+
 
 export const getAdmins = async (req, res) => {
     try {
@@ -20,6 +22,8 @@ export const getAdminById = async (req, res) => {
 
 export const createAdmin = async (req, res) => {
     try {
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
         const admin = await Admin.create(req.body);
         res.status(201).json(admin);
     } catch (error) {
