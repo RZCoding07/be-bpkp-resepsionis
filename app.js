@@ -17,7 +17,7 @@ const app = express();
 app.use(compression());
 // Allow all origins (or specify specific origins if needed)
 app.use(cors({
-    origin: ["http://localhost:3000"], // Frontend origin
+    origin: ["http://localhost:3000", "e-receptionists-bpkp.vercel.app"], // Frontend origin
     methods: 'GET, POST, PUT, DELETE, OPTIONS', // Allowed methods
     allowedHeaders: 'Content-Type, Authorization, X-Requested-With', // Allowed headers
     credentials: true, // If you need cookies to be included in requests
