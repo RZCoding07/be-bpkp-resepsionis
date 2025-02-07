@@ -25,12 +25,15 @@ const Visitor = db_app.define('visitor', {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true, allowNull: false },
     fullname: { type: DataTypes.STRING, allowNull: false },
     phone: { type: DataTypes.STRING, allowNull: false },
-    address: { type: DataTypes.TEXT, allowNull: false },
+address: { type: DataTypes.TEXT, allowNull: false },
+    email: { type: DataTypes.STRING, allowNull: false },
     purpose: { type: DataTypes.TEXT, allowNull: false },
+    agency: { type: DataTypes.STRING, allowNull: false },
     checkIn: { type: DataTypes.TIME, allowNull: false },
     checkOut: { type: DataTypes.TIME, allowNull: true },
     visit_date: { type: DataTypes.DATE, allowNull: false },
     signature: { type: DataTypes.TEXT, allowNull: true },
+    departement: { type: DataTypes.STRING, allowNull: false },
 }, { freezeTableName: true });
 
 // Division model

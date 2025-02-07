@@ -1,8 +1,15 @@
 import { Employee } from "../models/models.js";
+import { Division } from "../models/models.js"; // Make sure to import the Division model
+import { db_app } from "../config/Database.js";
 
 export const getEmployees = async (req, res) => {
     try {
-        const employees = await Employee.findAll();
+        const employees = await Employee.findAll({
+            include: {
+                model: Division, // Specify the Division model to include in the join
+                attributes: ['id', 'name'] // Specify the attributes to retrieve from the Division model
+            }
+        });
         res.status(200).json(employees);
     } catch (error) {
         res.status(500).json({ error: error.message });
