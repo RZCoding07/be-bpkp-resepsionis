@@ -152,7 +152,7 @@ export const login = async (req, res) => {
             return res.status(200).json({
                 message: "Login successful",
                 token: accessToken,
-                user: { id: account.id, email: account.email, username: account.username, fullname: account.fullname, role },
+                user: { id: account.id, email: account.email, username: account.username, fullname: account.fullname, role: account.role },
             });
         } else {
             console.log("Invalid email/username or password");

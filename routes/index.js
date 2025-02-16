@@ -9,9 +9,11 @@ import { getPetugas, getAdmin, createAdmin, updateAdmin, getPetugasById, createP
 import { getVisitors, getVisitorById, createVisitor, updateVisitor, deleteVisitor, checkInVisitor, checkOutVisitor } from '../controllers/Visitor.js';
 import { getDivisions, getDivisionById, createDivision, updateDivision, deleteDivision } from '../controllers/Division.js';
 import { getEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEmployee, getVwEmployees } from '../controllers/Employee.js';
+import { getDashboard } from "../controllers/Dashboard.js";
 
 const router = express.Router();
 
+router.get('/dashboard',  getDashboard);
 
 // petuga routes
 router.get('/admins', getAdmin);
