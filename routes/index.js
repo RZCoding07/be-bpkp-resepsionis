@@ -5,8 +5,7 @@ import path from 'path';
 import url from 'url';
 import { db_app } from "../config/Database.js";
 import bcrypt from 'bcrypt';
-import { getAdmins , getAdminById, createAdmin, updateAdmin, deleteAdmin } from '../controllers/Admin.js';
-import { getReceptionists, getReceptionistById, createReceptionist, updateReceptionist, deleteReceptionist } from '../controllers/Receptionist.js';
+import { getPetugas, getAdmin, createAdmin, updateAdmin, getPetugasById, createPetugas, updatePetugas, deletePetugas, login } from '../controllers/Petugas.js';
 import { getVisitors, getVisitorById, createVisitor, updateVisitor, deleteVisitor } from '../controllers/Visitor.js';
 import { getDivisions, getDivisionById, createDivision, updateDivision, deleteDivision } from '../controllers/Division.js';
 import { getEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEmployee } from '../controllers/Employee.js';
@@ -14,20 +13,20 @@ import { getEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEm
 const router = express.Router();
 
 
-// Admin routes
-router.get('/admins', getAdmins);
-router.get('/admins/:id', getAdminById);
+// petuga routes
+router.get('/admins', getAdmin);
+router.get('/receptionists', getPetugas);
+
+
+router.get('/receptionists/:id', getPetugasById);
+router.post('receptionists', createPetugas);
+router.put('/receptionists/:id', updatePetugas);
+router.delete('/receptionists/:id', deletePetugas);
+
+router.get('/admins/:id', getPetugasById);
 router.post('/admins', createAdmin);
 router.put('/admins/:id', updateAdmin);
-router.delete('/admins/:id', deleteAdmin);
-
-
-// Receptionist routes
-router.get('/receptionists', getReceptionists);
-router.get('/receptionists/:id', getReceptionistById);
-router.post('/receptionists', createReceptionist);
-router.put('/receptionists/:id', updateReceptionist);
-router.delete('/receptionists/:id', deleteReceptionist);
+router.delete('/admins/:id', deletePetugas);
 
 // Visitor routes
 router.get('/visitors', getVisitors);
@@ -49,5 +48,7 @@ router.get('/employees/:id', getEmployeeById);
 router.post('/employees', createEmployee);
 router.put('/employees/:id', updateEmployee);
 router.delete('/employees/:id', deleteEmployee);
+
+router.post('/login', login);
 
 export default router;

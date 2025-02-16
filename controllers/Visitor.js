@@ -3,6 +3,8 @@ import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import streamifier from "streamifier";
+import nodemailer from 'nodemailer';
+import QRCode from 'qrcode';
 
 dotenv.config();
 
@@ -13,9 +15,11 @@ cloudinary.config({
     secure: true,
 });
 
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const uploadMiddleware = upload.single("signature");
+
 
 async function runMiddleware(req, res, fn) {
     return new Promise((resolve, reject) => {
@@ -46,39 +50,75 @@ export const getVisitorById = async (req, res) => {
     }
 };
 
-
 export const createVisitor = async (req, res) => {
     try {
-      await runMiddleware(req, res, uploadMiddleware)
+      await runMiddleware(req, res, uploadMiddleware);
   
       if (req.body.checkOut === "") {
-        req.body.checkOut = null
+        req.body.checkOut = null;
       }
   
-      let signatureUrl = null
+      let signatureUrl = null;
       if (req.file) {
         try {
           const result = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream({ folder: "signatures" }, (error, result) => {
-              if (error) reject(error)
-              else resolve(result)
-            })
-            streamifier.createReadStream(req.file.buffer).pipe(stream)
-          })
-          signatureUrl = result.secure_url
+              if (error) reject(error);
+              else resolve(result);
+            });
+            streamifier.createReadStream(req.file.buffer).pipe(stream);
+          });
+          signatureUrl = result.secure_url;
         } catch (uploadError) {
-          console.error("Error uploading to Cloudinary:", uploadError)
-          return res.status(500).json({ error: "Error uploading signature" })
+          console.error("Error uploading to Cloudinary:", uploadError);
+          return res.status(500).json({ error: "Error uploading signature" });
         }
       }
   
-      const visitor = await Visitor.create({ ...req.body, signature: signatureUrl })
-      res.status(201).json(visitor)
+      const visitor = await Visitor.create({ ...req.body, signature: signatureUrl });
+  
+      // Generate QR code
+      const qrCodeData = `${visitor.id}`;
+      const qrCodeImage = await QRCode.toDataURL(qrCodeData);
+  
+      // Send email with QR code                            
+      const transporter = nodemailer.createTransport({
+        // Configure your email service here
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+  
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: visitor.email, // Assuming the visitor's email is in the request body
+        subject: 'Your Visitor Access QR Code',
+        html: `
+          <h1>Welcome!</h1>
+          <p>Here's your QR code for access:</p>
+          <img src="${qrCodeImage}" alt="Access QR Code"/>
+        `,
+        attachments: [
+          {
+            filename: 'qrcode.png',
+            content: qrCodeImage.split(';base64,').pop(),
+            encoding: 'base64'
+          }
+        ]
+      };
+
+      console.log('mailOptions', mailOptions);
+  
+      await transporter.sendMail(mailOptions);
+  
+      res.status(201).json(visitor);
     } catch (error) {
-      console.error("Error creating visitor:", error)
-      res.status(500).json({ error: error.message })
+      console.error("Error creating visitor:", error);
+      res.status(500).json({ error: error.message });
     }
-  }
+  };
 
 export const updateVisitor = async (req, res) => {
     try {
