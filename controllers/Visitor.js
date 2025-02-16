@@ -131,7 +131,8 @@ export const checkInVisitor = async (req, res) => {
     const approvalCheckIn = await ApprovalCheckIn.create({
       visitor_id: req.body.visitor_id,
       petugas_id: req.body.petugas_id,
-      status: "approved",
+      employee_id: req.body.employee_id,  
+      status: req.body.status,
     })
 
     // Generate QR code
@@ -178,19 +179,19 @@ export const checkInVisitor = async (req, res) => {
 
 export const checkOutVisitor = async (req, res) => {
   try {
-    const { checkin_id, petugas_id } = req.body
+    const { checkIn_id, petugas_id } = req.body
 
-    const checkIn = await ApprovalCheckIn.findByPk(checkin_id)
+    const checkIn = await ApprovalCheckIn.findByPk(checkIn_id)
     if (!checkIn) {
       return res.status(404).json({ error: "Check-in record not found" })
     }
 
-    if (checkIn.status !== "approved") {
+    if (checkIn.status !== "approve") {
       return res.status(400).json({ error: "Invalid check-in status" })
     }
 
     const approvalCheckOut = await ApprovalCheckOut.create({
-      checkin_id,
+      checkIn_id,
       petugas_id,
       status: "approved",
     })

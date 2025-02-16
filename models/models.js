@@ -61,6 +61,7 @@ const ApprovalCheckIn = db_app.define('approval_checkin', {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true, allowNull: false },
     petugas_id: { type: DataTypes.UUID, allowNull: false },
     visitor_id: { type: DataTypes.UUID, allowNull: false },
+    employee_id: { type: DataTypes.UUID, allowNull: false },
     status: { type: DataTypes.STRING, allowNull: false },
 }, { freezeTableName: true });
 
@@ -70,6 +71,9 @@ ApprovalCheckIn.belongsTo(Petugas, { foreignKey: 'petugas_id', onDelete: 'CASCAD
 
 // Add foreign key for ApprovalCheckIn -> Visitor
 ApprovalCheckIn.belongsTo(Visitor, { foreignKey: 'visitor_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+// Add foreign key for ApprovalCheckIn -> Employee
+ApprovalCheckIn.belongsTo(Employee, { foreignKey: 'employee_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
 // Add foreign key for Ratings -> Visitor
 Ratings.belongsTo(Visitor, { foreignKey: 'visitor_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });

@@ -6,7 +6,16 @@ import { db_app } from "../config/Database.js";
 // vw_employee
 export const getVwEmployees = async (req, res) => {
     try {
-        const employees = await db_app.query('SELECT * FROM vw_employee_division', { type: db_app.QueryTypes.SELECT });
+        const employees = await db_app.query( `
+            SELECT 
+    e.id AS employee_id,
+    e.fullname AS employee_name,
+    d.id AS division_id,
+    d.name AS division_name
+FROM employee e
+JOIN division d ON e.division_id = d.id;
+
+            `, { type: db_app.QueryTypes.SELECT });
         res.status(200).json(employees);
     } catch (error) {
         res.status(500).json({ error: error.message });
