@@ -186,7 +186,7 @@ export const checkOutVisitor = async (req, res) => {
       return res.status(404).json({ error: "Check-in record not found" })
     }
 
-    if (checkIn.status !== "approve") {
+    if (checkIn.status !== "approved") {
       return res.status(400).json({ error: "Invalid check-in status" })
     }
 
