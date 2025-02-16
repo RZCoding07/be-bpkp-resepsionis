@@ -6,9 +6,9 @@ import url from 'url';
 import { db_app } from "../config/Database.js";
 import bcrypt from 'bcrypt';
 import { getPetugas, getAdmin, createAdmin, updateAdmin, getPetugasById, createPetugas, updatePetugas, deletePetugas, login } from '../controllers/Petugas.js';
-import { getVisitors, getVisitorById, createVisitor, updateVisitor, deleteVisitor } from '../controllers/Visitor.js';
+import { getVisitors, getVisitorById, createVisitor, updateVisitor, deleteVisitor, checkInVisitor } from '../controllers/Visitor.js';
 import { getDivisions, getDivisionById, createDivision, updateDivision, deleteDivision } from '../controllers/Division.js';
-import { getEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEmployee } from '../controllers/Employee.js';
+import { getEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEmployee, getVwEmployees } from '../controllers/Employee.js';
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.get('/receptionists', getPetugas);
 
 
 router.get('/receptionists/:id', getPetugasById);
-router.post('receptionists', createPetugas);
+router.post('/receptionists', createPetugas);
 router.put('/receptionists/:id', updatePetugas);
 router.delete('/receptionists/:id', deletePetugas);
 
@@ -34,6 +34,7 @@ router.get('/visitors/:id', getVisitorById);
 router.post('/visitors', createVisitor);
 router.put('/visitors/:id', updateVisitor);
 router.delete('/visitors/:id', deleteVisitor);
+router.post('/checkin', checkInVisitor);
 
 // Division routes
 router.get('/divisions', getDivisions);
@@ -43,6 +44,7 @@ router.put('/divisions/:id', updateDivision);
 router.delete('/divisions/:id', deleteDivision);
 
 // Employee routes
+router.get('/vw-employees', getVwEmployees);
 router.get('/employees', getEmployees);
 router.get('/employees/:id', getEmployeeById);
 router.post('/employees', createEmployee);

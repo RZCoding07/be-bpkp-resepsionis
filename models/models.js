@@ -55,4 +55,37 @@ const Ratings = db_app.define('ratings', {
     comment: { type: DataTypes.TEXT, allowNull: true },
 }, { freezeTableName: true });
 
-export { Petugas, Visitor, Division, Employee };
+// make approval checkin, petugas_id and visitor_id as foreign key
+
+const ApprovalCheckIn = db_app.define('approval_checkin', {
+    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true, allowNull: false },
+    petugas_id: { type: DataTypes.UUID, allowNull: false },
+    visitor_id: { type: DataTypes.UUID, allowNull: false },
+    status: { type: DataTypes.STRING, allowNull: false },
+}, { freezeTableName: true });
+
+
+// Add foreign key for ApprovalCheckIn -> Petugas
+ApprovalCheckIn.belongsTo(Petugas, { foreignKey: 'petugas_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+// Add foreign key for ApprovalCheckIn -> Visitor
+ApprovalCheckIn.belongsTo(Visitor, { foreignKey: 'visitor_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+// Add foreign key for Ratings -> Visitor
+Ratings.belongsTo(Visitor, { foreignKey: 'visitor_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+// ADD checkout, checkIn id and petugas_id as foreign key
+const ApprovalCheckOut = db_app.define('approval_checkout', {
+    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true, allowNull: false },
+    checkIn_id: { type: DataTypes.UUID, allowNull: false },
+    petugas_id: { type: DataTypes.UUID, allowNull: false },
+    status: { type: DataTypes.STRING, allowNull: false },
+}, { freezeTableName: true });
+
+// Add foreign key for ApprovalCheckOut -> Petugas
+ApprovalCheckOut.belongsTo(Petugas, { foreignKey: 'petugas_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+// Add foreign key for ApprovalCheckOut -> checkIn
+ApprovalCheckOut.belongsTo(ApprovalCheckIn, { foreignKey: 'checkIn_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+export { Petugas, Visitor, Division, Employee, Ratings, ApprovalCheckIn, ApprovalCheckOut };

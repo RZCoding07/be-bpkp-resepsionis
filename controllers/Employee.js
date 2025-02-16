@@ -2,6 +2,17 @@ import { Employee } from "../models/models.js";
 import { Division } from "../models/models.js"; // Make sure to import the Division model
 import { db_app } from "../config/Database.js";
 
+
+// vw_employee
+export const getVwEmployees = async (req, res) => {
+    try {
+        const employees = await db_app.query('SELECT * FROM vw_employee_division', { type: db_app.QueryTypes.SELECT });
+        res.status(200).json(employees);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 export const getEmployees = async (req, res) => {
     try {
         const employees = await Employee.findAll({
