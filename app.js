@@ -29,7 +29,7 @@ app.use(morgan('dev'));
 const initializeDatabase = async () => {
     try {
         await db_app.authenticate(); 
-        // await db_app.sync({ alter: true });
+        await db_app.sync({ alter: true });
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
