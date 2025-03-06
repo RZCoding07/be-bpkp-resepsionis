@@ -135,6 +135,10 @@ export const checkInVisitor = async (req, res) => {
       status: req.body.status,
     })
 
+    const Time = new Date();
+    const checkIn = Time.getHours() + ":" + Time.getMinutes() + ":" + Time.getSeconds();
+    await Visitor.update({ checkIn:checkIn}, { where: { id: req.body.visitor_id } })
+
     // Generate QR code
     const qrCodeData = `${approvalCheckIn.id}_checkout`
     const qrCodeImage = await QRCode.toDataURL(qrCodeData)
@@ -195,6 +199,12 @@ export const checkOutVisitor = async (req, res) => {
       petugas_id,
       status: "approved",
     })
+
+    const Time = new Date();
+    const checkOut = Time.getHours() + ":" + Time.getMinutes() + ":" + Time.getSeconds();
+    await Visitor.update({ checkOut:checkOut}, { where: { id: checkIn.visitor_id }
+    })
+
 
     res.status(201).json({
       message: "Check-out approved",
